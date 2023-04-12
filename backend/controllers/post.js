@@ -1,18 +1,19 @@
 const Post = require('../models/Post');
 const PostDelta = require('../models/PostDelta');
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
 const postSchema = Joi.object({
   title: Joi.string().required(),
-  author_id: ObjectId().required(),
+  author_id: Joi.objectId().required(),
   date: Joi.string().default(String(Date.now())),
   approved: Joi.boolean().default(false),
   playgroud_url: Joi.string().required(),
-  like_user_ids: Joi.array().items(ObjectId()),
-  comment_ids: Joi.array().items(ObjectId()),
-  preview_image: Joi.string().optional(),
+  like_user_ids: Joi.array().items(Joi.objectId()),
+  comment_ids: Joi.array().items(Joi.objectId()),
   preview_text: Joi.string().optional(),
 });
+
 
 const postDeltaSchema = Joi.object({
   delta: Joi.string().required(),
@@ -33,7 +34,8 @@ exports.getAllPosts = async (req, res) => {
 
 exports.getPost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post_id = req.params.id;
+    const post = await Post.findById(post_id);
 
     if (!post) {
       res.status(404).send({ message: "Post Not Found!" })
@@ -123,20 +125,25 @@ exports.addComment = async (req, res) => {
 
 exports.likePost = async (req, res) => {
   const postId = req.params.postId;
-  const userId = req.user._id; // Assuming user is authenticated and available in req.user
+  const userId = req.user._id;
 
   const post = await Post.findById(postId);
   if (!post) {
     return res.status(404).json({ message: 'Post not found' });
   }
 
-  const isLiked = post.likes.includes(userId);
+  const is_liked = post.likes.includes(userId);
 
-  // Toggle the like
-  const update = isLiked
-    ? { $pull: { likes: userId } }
-    : { $addToSet: { likes: userId } };
+  const update =
+    is_liked ?
+      { $pull: { likes: userId } }
+      :
+      { $addToSet: { likes: userId } };
 
   await Post.findByIdAndUpdate(postId, update);
-  res.status(200).json({ message: isLiked ? 'Post unliked' : 'Post liked' });
+  res.status(200).json({ message: is_liked ? 'Post unliked' : 'Post liked' });
 };
+
+exports.deletePost = async (req, res) => {
+
+}

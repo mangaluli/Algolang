@@ -1,6 +1,33 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    required: true,
+    enum: ['active', 'muted', 'banned', 'deleted'],
+    default: 'active',
+  },
+  status_duration: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  status_description: {
+    type: String,
+    required: true,
+    default: 'No reason provided..',
+  },
+  priviliges: {
+    type: String,
+    required: true,
+    enum: ['user', 'mod', 'admin', 'owner'],
+    default: 'user',
+  },
+
+  name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -9,14 +36,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-
-  is_admin: {
-    type: Boolean,
   },
 
   post_ids: {

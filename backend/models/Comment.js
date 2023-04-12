@@ -1,16 +1,6 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  parent_type: {
-    type: String,
-    enum: ['post', 'comment'],
-    required: true,
-  },
-  parent_id: {
-    type: String,
-    required: true,
-  },
-
   author_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -38,7 +28,31 @@ const commentSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
-});
+},
+  { discriminatorKey: 'parent_type' }
+);
+
 
 const Comment = mongoose.model('comments', commentSchema);
-module.exports = Comment;
+
+const PostComment = Comment.discriminator(
+  'post',
+  new mongoose.Schema({
+    parent_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  })
+);
+
+const ReplyComment = Comment.discriminator(
+  'comment',
+  new mongoose.Schema({
+    parent_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  })
+);
+
+module.exports = { PostComment, ReplyComment };

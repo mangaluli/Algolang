@@ -28,11 +28,10 @@ exports.authorize = async (req, res, next) => {
   }
 }
 
-exports.restrictTo = (...roles) => {
-  async (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).send({ message: "Restricted" });
-    }
-    next();
-  };
+exports.userIsAdmin = async (req, res, next) => {
+  const user_id_admin = req.user.is_admin;
+  if (!user_id_admin) {
+    return res.status(404).send({ message: "Page not found!" });
+  }
+  next();
 };

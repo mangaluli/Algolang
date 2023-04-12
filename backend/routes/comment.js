@@ -7,7 +7,7 @@ const router = express.Router();
 // Autherization
 router.use(authMiddleware.authorize);
 
-router.patch('/:comment_id/like', commentController.likeComment);
+router.post('/:comment_id/like', commentController.likeComment);
 router.post('/:comment_id/reply', commentController.addReply);
 router.delete('/:comment_id', commentController.deleteComment);
 

@@ -8,5 +8,5 @@ const postDeltaSchema = new mongoose.Schema({
   },
 });
 
-const PostDelta = mongoose.model('posts', postDeltaSchema);
+const PostDelta = mongoose.model('postDeltas', postDeltaSchema);
 module.exports = PostDelta;
