@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
   author_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
+  },
+  author_name: {
+    type: String,
     required: true,
   },
   date: {
@@ -19,10 +15,18 @@ const postSchema = new mongoose.Schema({
     required: true,
     default: String(Date.now()),
   },
-  approved: {
-    type: Boolean,
+  category: {
+    type: String,
     required: true,
-    default: false,
+  },
+  preview_text: {
+    type: String,
+    required: true,
+  },
+
+  title: {
+    type: String,
+    required: true,
   },
   playgroud_url: {
     type: String,
@@ -41,11 +45,6 @@ const postSchema = new mongoose.Schema({
       ref: 'Comment',
     },
   ],
-
-  preview_text: {
-    type: String,
-    required: true,
-  }
 });
 
 const Post = mongoose.model('posts', postSchema);

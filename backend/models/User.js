@@ -1,21 +1,10 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  status: {
-    type: String,
+  is_verified: {
+    type: Boolean,
     required: true,
-    enum: ['active', 'muted', 'banned', 'deleted'],
-    default: 'active',
-  },
-  status_duration: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  status_description: {
-    type: String,
-    required: true,
-    default: 'No reason provided..',
+    default: false,
   },
   priviliges: {
     type: String,
@@ -38,18 +27,43 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  post_ids: {
-    type: Array,
-  },
-  commets_ids: {
-    type: Array,
-  },
-  liked_post_ids: {
-    type: Array,
-  },
-  liked_comment_ids: {
-    type: Array,
-  },
+  post_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
+  commets_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
+  follower_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+
+  liked_post_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
+  liked_comment_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
+  following_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const User = mongoose.model('users', userSchema);

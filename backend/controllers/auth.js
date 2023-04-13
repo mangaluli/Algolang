@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const BannedEmail = require('../models/BannedEmail');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 const { performance } = require('perf_hooks');
 
 
 const signUser = (user) => {
-  const { _id, is_admin } = user;
+  const { _id, privilages } = user;
   return jwt.sign(
     { _id, is_admin },
     process.env.JWT_SECRET,
@@ -44,13 +45,16 @@ exports.register = async (req, res) => {
       return res.status(400).send('Invalid body');
     }
 
-    const email_conflict = await User.findOne({ email: req.body.email });
-    if (email_conflict) {
-      return res.status(409).send('Email already in use');
-    }
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(req.body.password, salt);
+    const [email_conflict, email_is_banned] = await Promise.all([
+      User.findOne({ email: req.body.email }),
+      BannedEmail.findOne({ email: req.user.email }),
+    ]);
 
+    if (email_conflict || email_is_banned) {
+      return res.status(409).send({ message: 'Email already in use' });
+    }
+
+    const password = await bcrypt.hash(req.body.password, await bcrypt.genSalt(10));
     const new_user = User.create({
       name: req.body.name,
       email: req.body.email,

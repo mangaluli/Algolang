@@ -19,6 +19,7 @@ const commentSchema = Joi.object({
   parent_type: Joi.string().valid('post', 'comment').required(),
   parent_id: Joi.string().required(),
   author_id: Joi.objectId().required(),
+  author_name: Joi.string().required(),
   date: Joi.date().default(Date.now()).required(),
   delta: deltaSchema.required(),
   like_user_ids: Joi.array().items(Joi.objectId()).default([]),

@@ -6,8 +6,8 @@ Joi.objectId = require('joi-objectid')(Joi);
 const postSchema = Joi.object({
   title: Joi.string().required(),
   author_id: Joi.objectId().required(),
+  author_name: Joi.string().required(),
   date: Joi.string().default(String(Date.now())),
-  approved: Joi.boolean().default(false),
   playgroud_url: Joi.string().required(),
   like_user_ids: Joi.array().items(Joi.objectId()),
   comment_ids: Joi.array().items(Joi.objectId()),

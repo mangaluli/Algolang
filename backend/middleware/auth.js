@@ -26,12 +26,4 @@ exports.authorize = async (req, res, next) => {
     console.log(error);
     return res.status(500).send({ message: "Server error" });
   }
-}
-
-exports.userIsAdmin = async (req, res, next) => {
-  const user_id_admin = req.user.is_admin;
-  if (!user_id_admin) {
-    return res.status(404).send({ message: "Page not found!" });
-  }
-  next();
 };
