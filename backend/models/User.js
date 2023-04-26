@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   is_verified: {
@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
-  priviliges: {
+  privilige: {
     type: String,
     required: true,
-    enum: ['user', 'mod', 'admin', 'owner'],
-    default: 'user',
+    enum: ["user", "mod", "admin", "owner"],
+    default: "user",
   },
 
   name: {
@@ -27,44 +27,44 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  follower_user_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   post_ids: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: "Post",
     },
   ],
   commets_ids: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
-  ],
-  follower_ids: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "Comment",
     },
   ],
 
+  following_user_ids: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   liked_post_ids: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: "Post",
     },
   ],
   liked_comment_ids: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-    },
-  ],
-  following_ids: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "Comment",
     },
   ],
 });
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model("users", userSchema);
 module.exports = User;

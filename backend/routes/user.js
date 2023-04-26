@@ -1,15 +1,14 @@
-const express = require('express');
-const userController = require('../controllers/user');
-const { authorize } = require('../middleware/auth');
-const { checkBanned } = require('../middleware/checkBanned');
+const express = require("express");
+const { getUser, reportUser, followUser } = require("../controllers/user");
+const { authorize } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get('/:user_id', userController.getUser);
+router.get("/:user_id", getUser);
 
 router.use(authorize);
-router.use(checkBanned);
 
-router.post('/:user_id/report', userController.reportUser);
+router.post("/:user_id/report", reportUser);
+router.post("/:user_id/report", followUser);
 
 module.exports = router;
