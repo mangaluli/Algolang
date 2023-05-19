@@ -1,12 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-// Has to recieve the same _id as the og post.
 const postDeltaSchema = new mongoose.Schema({
   delta: {
-    type: String,
-    required: true,
+    ops: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          auto: false,
+        },
+        insert: {
+          type: Object,
+          required: true,
+        },
+        attributes: Object,
+      },
+    ],
   },
 });
 
-const PostDelta = mongoose.model('postDeltas', postDeltaSchema);
+const PostDelta = mongoose.model("postDeltas", postDeltaSchema);
 module.exports = PostDelta;

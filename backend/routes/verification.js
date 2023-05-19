@@ -3,7 +3,7 @@ const verificationControlloer = require("../controllers/verification");
 
 const router = express.Router();
 
-router.get("/", verificationControlloer.verifyUser);
-router.post("/", verificationControlloer.sendVerificationEmail);
+router.get("/", verificationControlloer.sendVerificationEmail);
+router.post("/", verificationControlloer.verifyUser);
 
 module.exports = router;

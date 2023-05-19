@@ -63,7 +63,13 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
       <header>
         <Box bg={bgColor[colorMode]} shadow="md" py={2} px={4}>
           <Flex alignItems="center">
-            <Text fontSize="lg" fontWeight="bold">
+            <Text
+              fontSize="xl"
+              fontWeight="bold"
+              color="teal.600"
+              cursor="pointer"
+              onClick={() => navigate("/")}
+            >
               AlgoLang
             </Text>
             <nav></nav>

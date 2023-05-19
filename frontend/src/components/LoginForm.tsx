@@ -77,7 +77,7 @@ function LoginForm() {
           </Checkbox>
           <Button
             type="submit"
-            colorScheme="blue"
+            colorScheme="teal"
             isLoading={formik.isSubmitting}
           >
             Sign in

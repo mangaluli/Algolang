@@ -29,7 +29,7 @@ const Connect: FunctionComponent<ConnectProps> = () => {
         bgColor="gray.50"
         shadow="md"
       >
-        <Tabs isFitted variant="line">
+        <Tabs isFitted variant="line" colorScheme="teal">
           <TabList mb="1em">
             <Tab>Login</Tab>
             <Tab>Register</Tab>

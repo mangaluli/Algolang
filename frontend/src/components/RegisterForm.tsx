@@ -46,7 +46,9 @@ function RegisterForm() {
         .catch((error) => {
           setError(error);
           console.log(error);
+          formik.isSubmitting = false;
         });
+      formik.isSubmitting = false;
     },
   });
 
@@ -74,7 +76,7 @@ function RegisterForm() {
               onBlur={formik.handleBlur}
               bgColor="white"
             />
-            {formik.errors.username ? (
+            {formik.touched.username && formik.errors.username ? (
               <FormErrorMessage>{formik.errors.username}</FormErrorMessage>
             ) : (
               <FormHelperText>
@@ -94,9 +96,12 @@ function RegisterForm() {
               onBlur={formik.handleBlur}
               bgColor="white"
             />
-            <FormHelperText>Hidden, for verification only!</FormHelperText>
 
-            <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            {formik.touched.email && formik.errors.email ? (
+              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            ) : (
+              <FormHelperText>Hidden, for verification only!</FormHelperText>
+            )}
           </FormControl>
           <FormControl
             id="password"
@@ -112,9 +117,11 @@ function RegisterForm() {
               onBlur={formik.handleBlur}
               bgColor="white"
             />
-            <FormHelperText>A password for your account.</FormHelperText>
-
-            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            {formik.touched.password && formik.errors.password ? (
+              <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+            ) : (
+              <FormHelperText>A password for your account.</FormHelperText>
+            )}
           </FormControl>
           <FormControl
             id="password_confirmation"
@@ -130,17 +137,20 @@ function RegisterForm() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               bgColor="white"
-            />
-            <FormHelperText>Re-enter to confirm password.</FormHelperText>
-
-            <FormErrorMessage>
-              {formik.errors.password_confirmation}
-            </FormErrorMessage>
+            />{" "}
+            {formik.touched.password_confirmation &&
+            formik.errors.password_confirmation ? (
+              <FormErrorMessage>
+                {formik.errors.password_confirmation}
+              </FormErrorMessage>
+            ) : (
+              <FormHelperText>Re-enter to confirm password.</FormHelperText>
+            )}
           </FormControl>
           <Button
             type="submit"
             marginTop="30px"
-            colorScheme="blue"
+            colorScheme="teal"
             isLoading={formik.isSubmitting}
           >
             Sign in

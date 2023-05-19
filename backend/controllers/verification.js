@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 exports.verifyUser = async (req, res) => {
   try {
-    const token = req.query.token;
+    const token = req.body.token;
 
     if (!token) {
       console.log("BBB");
@@ -17,24 +17,32 @@ exports.verifyUser = async (req, res) => {
     const verificationToken = await VerificationToken.findOne({ token });
 
     if (!verificationToken) {
-      return res.status(400).send("Invalid or expired verification link.");
+      return res
+        .status(400)
+        .send({ message: "Invalid or expired verification link." });
     }
 
     try {
       jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
       console.log(error);
-      return res.status(400).send("Invalid or expired verification link.");
+      return res
+        .status(400)
+        .send({ message: "Invalid or expired verification link." });
     }
 
     const user = await User.findById(verificationToken.user_id);
 
     if (!user) {
-      return res.status(400).send("Invalid or expired verification link.");
+      return res
+        .status(400)
+        .send({ message: "Invalid or expired verification link." });
     }
 
     if (user.is_verified) {
-      return res.status(200).send("Your email is already verified.");
+      return res
+        .status(200)
+        .send({ message: "Invalid or expired verification link." });
     }
 
     user.is_verified = true;

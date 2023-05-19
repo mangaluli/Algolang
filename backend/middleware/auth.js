@@ -1,9 +1,9 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 exports.authorize = async (req, res, next) => {
   try {
-    const token = req.header('Authorization');
+    const token = req.header("Authorization");
     if (!token) {
       return res.status(401).send({ message: "Invalid token" });
     }
@@ -26,4 +26,9 @@ exports.authorize = async (req, res, next) => {
     console.log(error);
     return res.status(500).send({ message: "Server error" });
   }
+};
+
+exports.isAuthenticated = (req, res, next) => {
+  if (req.session.user) next();
+  else next("route");
 };

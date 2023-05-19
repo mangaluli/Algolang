@@ -1,27 +1,25 @@
 import {
   Box,
   Container,
+  Spacer,
   Flex,
+  AspectRatio,
   Heading,
   Text,
   Image,
   Button,
 } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
+import Post from "./Post";
+import PostPreview from "./PostPreview";
+import PostInterface from "../interfaces/Post";
 
 interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
   return (
     <>
-      <Flex
-        flexDir="column"
-        maxW="8xl"
-        mx="auto"
-        my="8"
-        gap="16"
-        px={["2", "2", "2", "16"]}
-      >
+      <Flex flexDir="column" maxW="6xl" mx="auto" my="8" gap="12">
         <Heading size={["3xl", "4xl"]} textAlign="center">
           Welcome to AlgoLang!
         </Heading>
@@ -29,11 +27,12 @@ const Home: FunctionComponent<HomeProps> = () => {
           flexDir={["column", "column", "column", "row"]}
           align="center"
           justify="space-evenly"
-          gap={["8", "8", "8", "0"]}
+          gap={["8", "8", "8", "16"]}
+          mx={["2", "16"]}
         >
           <Text
+            flex="1"
             fontSize={["xl", "2xl"]}
-            maxW={["", "", "", "50%"]}
             textAlign={["center", "center", "center", "justify"]}
           >
             Discover a vibrant community of programmers, mathematicians, and
@@ -43,7 +42,9 @@ const Home: FunctionComponent<HomeProps> = () => {
             discussions, explore new concepts, and expand your knowledge
             alongside like-minded individuals.
           </Text>
-          <Image w={["", "", "", "33%"]} src="/vector.svg" />
+          <AspectRatio ratio={1} flex="1" w={["90%", "70%", "60%"]}>
+            <Image src="/vector.svg" />
+          </AspectRatio>
         </Flex>
         <Text fontSize={["xl", "2xl"]} textAlign="center">
           Join us today to contribute your own creations, interact with others,

@@ -1,14 +1,13 @@
 export default interface Post {
   _id?: string;
   
-  author_id: string;
-  author_name: string;
+  author_id?: string;
+  author_name?: string;
   title: string;
-  category: string;
-  date: string;
+  categories: string[];
+  date?: Date; //auto generated on server
 
-  playground_url: string;
-  preview_text: string;
+  url: string;
 
   viewed_by_user_ids?: string[];
   comment_ids?: string[];

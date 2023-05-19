@@ -1,13 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-  author_id: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  author_name: {
-    type: String,
+    ref: "users",
     required: true,
   },
   date: {
@@ -15,37 +11,45 @@ const postSchema = new mongoose.Schema({
     required: true,
     default: String(Date.now()),
   },
-  category: {
-    type: String,
-    required: true,
-  },
-  preview_text: {
-    type: String,
-    required: true,
-  },
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "tags",
+    },
+  ],
 
   title: {
     type: String,
     required: true,
   },
-  playgroud_url: {
+  url: {
     type: String,
     required: true,
   },
+  post_delta: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "postDeltas",
+  },
 
-  like_user_ids: [
+  likes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "users",
     },
   ],
-  comment_ids: [
+  comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: "comments",
+    },
+  ],
+  views: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
     },
   ],
 });
 
-const Post = mongoose.model('posts', postSchema);
+const Post = mongoose.model("posts", postSchema);
 module.exports = Post;

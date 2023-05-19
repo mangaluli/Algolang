@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-exports.sendVerificationEmail = async (email, token) => {
-  const verificationLink = `http://localhost:${process.env.PORT}/verify-email?token=${token}`;
+exports.sendVerificationEmail = async function (email, token) {
+  const verificationLink = `http://localhost:3000/verify?token=${token}`;
   const mailOptions = {
     from: '"AlgoLang" <noreply@algolang.net>',
     to: email,

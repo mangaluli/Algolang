@@ -6,14 +6,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
-  privilige: {
+  privilege: {
     type: String,
     required: true,
     enum: ["user", "mod", "admin", "owner"],
     default: "user",
   },
 
-  name: {
+  username: {
     type: String,
     required: true,
   },
@@ -27,41 +27,42 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  follower_user_ids: [
+  followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
   ],
-  post_ids: [
+  following: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    },
-  ],
-  commets_ids: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
+      ref: "users",
     },
   ],
 
-  following_user_ids: [
+  posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "posts",
     },
   ],
-  liked_post_ids: [
+  commets: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
+      ref: "comments",
     },
   ],
-  liked_comment_ids: [
+
+  liked_posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
+      ref: "posts",
+    },
+  ],
+  liked_comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "comments",
     },
   ],
 });
