@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
@@ -17,6 +18,11 @@ const postSchema = new mongoose.Schema({
       ref: "tags",
     },
   ],
+  score: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
 
   title: {
     type: String,
@@ -26,9 +32,9 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  post_delta: {
+  delta: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "postDeltas",
+    ref: "deltas",
   },
 
   likes: [
@@ -41,12 +47,6 @@ const postSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "comments",
-    },
-  ],
-  views: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
     },
   ],
 });

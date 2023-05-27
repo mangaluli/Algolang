@@ -22,7 +22,6 @@ exports.register = async (req, res) => {
 
     const validation_error = registerSchema.validate(req.body).error;
     if (validation_error) {
-      console.log("invalid body: " + req.body);
       return res.status(400).send("Invalid body");
     }
 
@@ -103,10 +102,20 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  req.session.destroy(function (error) {
+    if (error) {
+      console.log(error);
+      return res.status(500).send({ message: "Server error" });
+    } else {
+      res.clearCookie("connect.sid", { path: "/" });
+      return res.status(200).send({ message: "Logout successful" });
+    }
+  });
+};
+
 exports.session = async (req, res) => {
   try {
-    console.log("user: ", req.session.user);
-
     if (!req.session.user) {
       res.status(400);
     }

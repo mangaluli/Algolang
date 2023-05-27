@@ -1,13 +1,14 @@
+import Delta from "./Delta";
+import User from "./User";
+
 export default interface Comment {
   _id?: string;
-  parent_type?: string;
-  
-  author_id: string;
-  author_name: string;
-  date: string;
+  parent: string;
+  refModel: string;
+  author?: User;
+  date?: string;
+  delta: Delta;
 
-  delta: string;
-
-  reply_ids?: string[];
-  like_user_ids?: string[];
+  likes?: string[] | User[];
+  comments?: string[] | Comment[];
 }

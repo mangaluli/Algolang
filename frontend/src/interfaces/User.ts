@@ -1,18 +1,16 @@
+import Post from "./Post";
+import Comment from "./Comment"
+
 export default interface User {
   _id?: string;
-  is_verified?: boolean;
-  privilige?: string;
-
+  privilege?: string;
   username?: string;
   email?: string;
   password?: string;
-  image?: string;
 
-  follower_user_ids?: string[];
-  post_ids?: string[];
-  comment_ids?: string[];
+  followers?: string[] | User[];
+  folowing?: string[] | User[];
 
-  following_user_ids?: string[];
-  liked_post_ids?: string[];
-  liked_comment_ids?: string[];
+  posts?: string[] | Post[];
+  comments?: string[] | Comment[];
 }

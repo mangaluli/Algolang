@@ -8,7 +8,6 @@ exports.verifyUser = async (req, res) => {
     const token = req.body.token;
 
     if (!token) {
-      console.log("BBB");
       return res
         .status(400)
         .send({ message: "Invalid or expired verification link" });

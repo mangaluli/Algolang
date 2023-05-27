@@ -1,15 +1,28 @@
 const Post = require("../models/Post");
-const PostDelta = require("../models/PostDelta");
+const Delta = require("../models/Delta");
+const Comment = require("../models/Comment");
+
+const calculateScore = (post) => {
+  const now = new Date();
+  const ms = now - post.date;
+  const hours_ago = ms / (1000 * 60 * 60);
+
+  // (s-1)/(h+2)^1.5
+  const score = (post.likes.length - 1) / (hours_ago + 2) ** 1.5;
+  const limited_float = score.toFixed(4);
+  return Math.max(limited_float, 0);
+};
 
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
       .populate("author", "username")
       .populate("tags");
-    await res.status(200).send(posts);
+
+    return res.status(200).send(posts);
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
@@ -20,88 +33,123 @@ exports.getPost = async (req, res) => {
     const post = await Post.findById(post_id)
       .populate("author", "username")
       .populate("tags")
-      .populate("post_delta");
+      .populate("delta");
 
     if (!post) {
-      await res.status(404).send({ message: "No post found!" });
+      return res.status(404).send({ message: "No Post Found!" });
     }
 
-    await res.status(200).send(post);
+    return res.status(200).send(post);
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
 exports.addPost = async (req, res) => {
   try {
     const { post } = req.body;
-    console.log(post.post_delta);
+
     if (!post) {
-      await res.status(400).send({ message: "Wrong Body!" });
+      return res.status(400).send({ message: "Wrong Body!" });
     }
 
     // to be implemented
     const validation_error = false;
 
     if (validation_error) {
-      await res.status(400).send({ message: "Wrong Body!" });
+      return res.status(400).send({ message: "Wrong Body!" });
     }
 
-    const new_post_delta = new PostDelta(post.post_delta);
-    console.log(new_post_delta);
-    await Post.create({ ...post, post_delta: new_post_delta._id });
-    await new_post_delta.save();
+    const new_delta = new Delta(post.delta);
 
-    await res.status(201).send({ message: "Post created successfully!" });
+    await Post.create({ ...post, delta: new_delta._id });
+    await new_delta.save();
+
+    return res.status(201).send({ message: "Post created successfully!" });
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
-const a = {
-  post: {
-    author: "64613bece19ad9c09e552210",
-    date: "1684249028724",
-    tags: [
-      "6464fc20f9134849fd81b076",
-      "64650a60f9134849fd81b07d",
-      "64650aa37fcf2dde80f35e1e",
-      "64650aac7fcf2dde80f35e21",
-    ],
+exports.updatePost = async (req, res) => {
+  try {
+    return res.status(200).send({ message: "Post updated successfully!" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error!" });
+  }
+};
 
-    title: "Edge collision detection",
-    url: "//jsfiddle.net/mangaluli/n37c0pzh/",
+exports.addComment = async (req, res) => {
+  try {
+    // TODO
+    const validation_error = false;
 
-    likeds: ["64613bece19ad9c09e552210"],
-    comment_ids: [],
-    post_delta: {
-      ops: [
-        {
-          insert: "WOW A FREAKING BOUNCING BALL! WHO WOULD'VE THOUGHT?",
-          _id: {
-            $oid: "64657131464a7c80aa192b79",
-          },
-        },
-        {
-          insert: "\n",
-          attributes: {
-            header: 1,
-          },
-          _id: {
-            $oid: "64657131464a7c80aa192b7a",
-          },
-        },
-        {
-          insert:
-            "Prepare to have your mind blown. Yes, you read it right. A BOUNCING BALL. We've officially reached the pinnacle of human achievement, folks. Move over, sliced bread.\nNow, you might be sitting there, jaw dropped, eyes wide, thinking, 'How? How did they manage to make a ball bounce on a webpage? Are they wizards?' Well, let me lift the veil off this spellbinding spectacle.\nIt's actually quite simple, once you understand the basics of ball bouncing. You see, we've all been overthinking it. All you need to know is when the ball is at X=0, or as us wizards call it, 'the very left side', we just give that ball a nudge to the right. In technical terms, we set xd (that's X Delta for you laypeople) to +1.\nBut what about when our adventurous ball decides to wander off the right side of the screen, you ask? Well, we don't like rule-breakers here, so when X is more than the width of the screen plus the radius of our rebellious little ball (width+r), we set xd to -1, sending it back from whence it came.\nAnd the same goes for y, our vertical explorer. Too high or too low, and we give it a little push in the opposite direction.\nSo there you have it, folks. The mystifying bouncing ball demystified. No magic, just a little bit of logic, a dash of geometry, and a whole lot of spare time.\nRemember, with great power comes great responsibility. Use this bouncing ball wisdom wisely, and only for good. Or, you know, to amuse yourself when you're bored. Either way, have fun!",
-          _id: {
-            $oid: "64657131464a7c80aa192b7b",
-          },
-        },
-      ],
-    },
-    __v: 0,
-  },
+    if (validation_error) {
+      return res.status(400).send({ message: "Invalid Body!" });
+    }
+
+    // NEW COMMENT
+    const author = req.session.user._id;
+    const new_comment = new Comment({ ...req.body, author });
+
+    // UPDATE POST WITH NEW COMMENT
+    const post_id = new_comment.parent;
+    const post = await Post.findById(post_id);
+
+    if (!post) {
+      return res.status(404).send({ message: "Post Not Found!" });
+    }
+
+    const update = { $push: { comments: new_comment._id } };
+
+    await Post.findByIdAndUpdate(post_id, update);
+    await new_comment.save();
+
+    return res.status(201).send({ message: "Comment posted successfully!" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error!" });
+  }
+};
+
+// Toggle Behaviour
+exports.likePost = async (req, res) => {
+  try {
+    const { post_id } = req.params;
+    const user_id = req.session.user._id;
+
+    const post = await Post.findById(post_id);
+    if (!post) {
+      res.status(404).send({ message: "Post Not Found!" });
+    }
+
+    let update, liked;
+    if (post.likes.includes(user_id)) {
+      liked = false;
+      update = {
+        $pull: { likes: user_id },
+        // $set: { score: calculateScore(post, -1) },
+      };
+    } else {
+      liked = true;
+      update = {
+        $push: { likes: user_id },
+        // $set: { score: calculateScore(post, +1) },
+      };
+    }
+    await Post.findByIdAndUpdate(post_id, update);
+    let likes = post.likes.length;
+    const delta = liked ? +1 : -1;
+    likes += delta;
+
+    return res
+      .status(200)
+      .send({ message: "Post un/liked successfully", liked, likes });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ message: "Server Error!" });
+  }
 };
