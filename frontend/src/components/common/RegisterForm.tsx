@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import { Formik, Field, Form, FormikHelpers, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { register } from "../../apis/authApi";
@@ -36,9 +36,9 @@ const registerSchema = Yup.object({
     .oneOf([Yup.ref("password"), ""], "Passwords must match"),
 });
 
-interface RegisterFormProps {}
+// interface RegisterFormProps {}
 
-const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
+const RegisterForm: FunctionComponent = () => {
   const navigate = useNavigate();
   const handleSubmit = async (
     values: Values,
@@ -85,7 +85,7 @@ const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
                 name="username"
                 type="text"
                 placeholder="TheLegend27"
-                className={`px-2 py-1 border-2 rounded-md ${
+                className={`rounded-md border-2 px-2 py-1 ${
                   errors.username && touched.username
                     ? "border-red-400"
                     : "border-stone-400"
@@ -112,7 +112,7 @@ const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
                 name="email"
                 type="email"
                 placeholder="legend27@domain.com"
-                className={`px-2 py-1 border-2 rounded-md ${
+                className={`rounded-md border-2 px-2 py-1 ${
                   errors.email && touched.email
                     ? "border-red-400"
                     : "border-stone-400"
@@ -139,7 +139,7 @@ const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
                 name="password"
                 type="password"
                 placeholder="********"
-                className={`px-2 py-1 border-2 rounded-md ${
+                className={`rounded-md border-2 px-2 py-1 ${
                   errors.password && touched.password
                     ? "border-red-400"
                     : "border-stone-400"
@@ -169,7 +169,7 @@ const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
                 name="password_repeat"
                 type="password"
                 placeholder="********"
-                className={`px-2 py-1 border-2 rounded-md ${
+                className={`rounded-md border-2 px-2 py-1 ${
                   errors.password_repeat && touched.password_repeat
                     ? "border-red-400"
                     : "border-stone-400"
@@ -187,7 +187,7 @@ const RegisterForm: FunctionComponent<RegisterFormProps> = () => {
             </div>
             {/* SUBMIT */}
             <button
-              className="px-4 py-1 mt-1 shadow-md rounded-lg bg-stone-900 text-stone-50 text-lg"
+              className="mt-1 rounded-lg border-2 border-stone-100 bg-blue-600 px-4 py-1 text-lg text-stone-50 hover:border-blue-600 hover:bg-blue-600"
               disabled={isSubmitting}
               type="submit"
             >

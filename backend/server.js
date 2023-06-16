@@ -43,18 +43,20 @@ app.use(
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const verification = require("./routes/verification");
-const checkUrl = require("./routes/checkUrl");
+const testUrl = require("./routes/testUrl");
 const post = require("./routes/post");
 const tag = require("./routes/tag");
 const comment = require("./routes/comment");
+const profile = require("./routes/profile");
 
 app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/verify", verification);
-app.use("/api/check-url", checkUrl);
+app.use("/api/test-url", testUrl);
 app.use("/api/post", post);
 app.use("/api/tag", tag);
 app.use("/api/comment", comment);
+app.use("/api/profile", profile);
 
 app.listen(PORT, () =>
   console.log(`Port ${PORT} active, Node server standing by.`)

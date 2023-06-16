@@ -1,133 +1,181 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
-import Post from "../../interfaces/Post";
-import PostDelta from "../../interfaces/Delta";
-import PostPreview from "../common/PostPreview";
-import { useParams } from "react-router-dom";
-import { getPost } from "../../apis/postApi";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import { addPost, getPost, updatePost } from "../../apis/postApi";
 import { UserContext } from "../../providers/UserProvider";
-import Tag from "../../interfaces/Tag";
-import { getAllTags } from "../../apis/tagsApi";
-import { useQuill } from "react-quilljs";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import EditPostForm from "../common/EditPostForm";
+import PostPreview from "../common/PostPreview";
 import * as Yup from "yup";
+import EditDeltaForm from "../common/EditDeltaForm";
+import PageNotFound from "./PageNotFound";
+import Spinner from "../common/Spinner";
+import User from "../../interfaces/User";
+import Tag from "../../interfaces/Tag";
+import DeltaInterface from "../../interfaces/Delta";
 
-const quill_setting = {
-  theme: "snow",
-  modules: {
-    toolbar: [
-      ["bold", "italic", "underline"],
-      [{ list: "bullet" }],
-      ["link"],
-      ["clean"],
-    ],
-  },
-};
+interface Post {
+  _id: string;
+  date: string;
+  author: User;
+  tags: Tag[];
+  score?: number;
 
-const postSchema = Yup.object().shape({
-  title: Yup.string().min(2).max(255).required(),
-  url: Yup.string().min(1).max(255).required(),
-  tags: Yup.array().of(
-    Yup.string()
-      .length(24)
-      .matches(/^[0-9a-fA-F]{24}$/)
-      .required()
-  ),
-  delta: Yup.object().shape({
-    ops: Yup.array()
-      .of(
-        Yup.object().shape({
-          insert: Yup.object().required(),
-          attributes: Yup.object(),
-        })
-      )
-      .required(),
-  }),
-});
+  title: string;
+  delta: DeltaInterface;
+  url: string;
 
-interface EditPostProps {
-  isNew?: boolean;
+  likes: string[];
+  comments: string[];
 }
 
-const EditPost: FunctionComponent<EditPostProps> = ({ isNew = false }) => {
-  const { post_id } = useParams();
+interface EditPostProps {
+  is_new?: boolean;
+}
+
+const EditPost: FunctionComponent<EditPostProps> = ({ is_new }) => {
   const { user } = useContext(UserContext);
-  const { quill, quillRef } = useQuill(quill_setting);
 
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [post, setPost] = useState<Post>({
-    date: "69",
-    author: user!,
-    tags: [],
+  if (!user) {
+    return <PageNotFound />;
+  }
 
-    delta: {
-      ops: [{ insert: "" }],
-    },
-    title: "",
-    url: "",
+  const { post_id } = useParams();
 
-    likes: [],
-    comments: [],
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [post, setPost] = useState<Post>();
+
+  const postSchema = Yup.object().shape({
+    title: Yup.string().required().max(255),
+    url: Yup.string().required().max(255),
+    tags: Yup.array()
+      .of(
+        Yup.object().shape({
+          _id: Yup.string()
+            .length(24)
+            .matches(/^[0-9a-fA-F]{24}$/)
+            .required(),
+          value: Yup.string().required(),
+        })
+      )
+      .min(1, "Tags must have a minimum length of 1"),
+    delta: Yup.object().shape({
+      ops: Yup.array()
+        .of(
+          Yup.object().shape({
+            insert: Yup.string().required("Post can't be empty"),
+            attributes: Yup.object(),
+          })
+        )
+        .required(),
+    }),
   });
 
-  const fetchPost = () => {
-    if (!isNew && post_id) {
-      getPost(post_id)
-        .then((res) => {
-          setPost(res.data);
-        })
-        .catch((error) => {
-          toast.error("Error Loading Post: " + error.response.message);
-        });
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!submitting) {
+      setSubmitting(true);
+      const id = toast.loading("Saving post..");
+
+      if (post) {
+        try {
+          await postSchema.validate(post);
+
+          if (is_new) {
+            try {
+              const res = await addPost(post);
+              toast.success("Post uploaded successfully", { id });
+              setSubmitting(false);
+              navigate(`/post/${res.data._id}`);
+            } catch (error) {
+              toast.error(String(error), { id });
+              setSubmitting(false);
+            }
+          } else {
+            try {
+              await updatePost(post);
+              toast.success("Post updated successfully", { id });
+              setSubmitting(false);
+              navigate(`/post/${post._id}`);
+            } catch (error) {
+              toast.error(String(error), { id });
+              setSubmitting(false);
+            }
+          }
+        } catch (error) {
+          toast.error(String(error), { id });
+          setSubmitting(false);
+        }
+      }
     }
   };
 
-  const fetchTags = () => {
-    getAllTags()
-      .then((res) => {
-        setTags(res.data);
-      })
-      .catch((error) => {
-        toast.error("Error Loading Tags: " + error.response.message);
-      });
-  };
-
-  const handleSubmit = (values: Post) => {
-    console.log(values);
+  const fetchPost = async () => {
+    try {
+      const posts_res = await getPost(String(post_id));
+      setPost(posts_res.data);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error Loading Post: " + error);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchPost();
-    fetchTags();
-    quill && quill.setContents(post.delta as any);
-  }, [quill]);
+    if (is_new) {
+      setPost({
+        _id: "",
+        author: user,
+        date: "69",
+        tags: [],
+        title: "",
+        url: "",
+        delta: { ops: [{ insert: "" }] },
+        likes: [],
+        comments: [],
+      });
+      setLoading(false);
+    } else {
+      fetchPost();
+    }
+  }, []);
+
+  if (loading) {
+    return <Spinner size="max-w-[22%] max-h-[22%]" />;
+  }
 
   return (
-    <div className="flex flex-col justify-center container max-w-screen-lg m-auto gap-4">
-      <div className="flex">
-        {/* EDIT FORM */}
-        <div className="flex flex-col w-full bg-red-200 gap-2">
-          <Formik
-            initialValues={{
-              title: post.title,
-              url: post.url,
-              tags: post.tags,
-              delta: post.delta,
-            }}
-            validationSchema={postSchema}
-            onSubmit={(values) => handleSubmit(values)}
+    <>
+      {post ? (
+        <div className="container m-auto flex max-w-screen-lg flex-col gap-4 py-8">
+          <div className="flex gap-4">
+            <div className="flex w-full flex-col items-stretch">
+              <h2 className="text-center text-xl font-bold">
+                Post&apos;s Basic Information:
+              </h2>
+              <EditPostForm post={post} setPost={setPost} />
+            </div>
+            <div>
+              <h2 className="text-center text-xl font-bold">Post Prview:</h2>
+              <PostPreview post={post} />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-center text-xl font-bold">Post&apos;s Text:</h2>
+            <EditDeltaForm delta={post.delta} setPost={setPost} />
+          </div>
+          <button
+            className="m-auto w-max rounded-lg bg-stone-900 px-4 py-1 text-lg text-stone-50 shadow-md"
+            onClick={() => handleSubmit()}
           >
-            <Form></Form>
-          </Formik>
+            {is_new ? "Post" : "Save"}
+          </button>
         </div>
-        {/* POST PREVIEW */}
-        <PostPreview post={post} />
-      </div>
-      {/* DELTA QUILL */}
-      <div>
-        <div className="bg-white" ref={quillRef}></div>
-      </div>
-    </div>
+      ) : (
+        <PageNotFound />
+      )}
+    </>
   );
 };
 

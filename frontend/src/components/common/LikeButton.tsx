@@ -63,15 +63,15 @@ const LikeButton: FunctionComponent<LikeButtonProps> = ({
     <>
       {user ? (
         <button
-          className="flex items-center gap-0.5 h-3 text-stone-500"
+          className="flex h-3 items-center gap-0.5 text-stone-500"
           onClick={() => handleLike()}
         >
           {loading ? <Spinner size="w-4 h-4" /> : localLikes}
-          <HeartIcon className={"w-5 h-5 " + (localLiked && "fill-red-500")} />
+          <HeartIcon className={"h-5 w-5 " + (localLiked && "fill-red-500")} />
         </button>
       ) : (
-        <span className="flex items-center gap-0.5 h-3 text-sm text-stone-500">
-          {localLikes} <HeartIcon className="w-5 h-5" />
+        <span className="flex h-3 items-center gap-0.5 text-sm text-stone-500">
+          {localLikes} <HeartIcon className="h-5 w-5" />
         </span>
       )}
     </>

@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { useQuill } from "react-quilljs";
 
 import "quill/dist/quill.snow.css";
@@ -9,9 +9,9 @@ import { Transition } from "@headlessui/react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 interface NewCommentProps {
-  refreshParent: Function;
   parent_id: string;
   refModel: string;
+  refreshParent: () => void;
 }
 
 function isDeltaEmpty(delta: Delta): boolean {
@@ -76,21 +76,19 @@ const NewComment: FunctionComponent<NewCommentProps> = ({
     }
   };
 
-  useEffect(() => {}, []);
-
   return (
     <>
-      <div className="flex flex-col container max-w-screen-md m-auto gap-2">
-        <p className="text-stone-900 font-bold text-lg underline text-center">
+      <div className="container m-auto flex max-w-screen-md flex-col gap-2">
+        <p className="text-center text-lg font-bold text-stone-900 underline">
           Leave a comment
         </p>
 
-        <div className="w-full h-full shadow-md bg-white">
+        <div className="h-full w-full bg-white shadow-md">
           <div className="p-2 " ref={quillRef} />
         </div>
 
         <button
-          className="flex items-center gap-2 px-4 py-1 rounded-lg bg-stone-900 text-stone-50 text-lg w-min self-center"
+          className="flex w-min items-center gap-2 self-center rounded-lg bg-stone-900 px-4 py-1 text-lg text-stone-50"
           disabled={submitting}
           onClick={() => handleCommentSubmit()}
         >
@@ -101,7 +99,7 @@ const NewComment: FunctionComponent<NewCommentProps> = ({
             enterTo="transform rotate-[180deg] opacity-100"
             leave="transition transform duration-[0ms]"
           >
-            <ArrowPathIcon className="w-4 h-4" />
+            <ArrowPathIcon className="h-4 w-4" />
           </Transition>
           {submitting ? "Posting.." : "Post"}
         </button>

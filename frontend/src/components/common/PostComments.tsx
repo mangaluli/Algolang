@@ -10,7 +10,7 @@ interface PostCommentsProps {
   parent_id: string;
 
   update: boolean;
-  updateParent: Function;
+  updateParent: () => void;
 }
 
 const PostComments: FunctionComponent<PostCommentsProps> = ({
@@ -25,10 +25,7 @@ const PostComments: FunctionComponent<PostCommentsProps> = ({
   const [canLoadMore, setCanLoadMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const fetchComments = (
-    page_number: number = page,
-    force_fetch: boolean = false
-  ) => {
+  const fetchComments = (page_number: number = page, force_fetch = false) => {
     if ((canLoadMore && !loading) || force_fetch) {
       setLoading(true);
       getComments(parent_type, parent_id, page)
@@ -53,7 +50,7 @@ const PostComments: FunctionComponent<PostCommentsProps> = ({
   }, [update]);
 
   return (
-    <div className="mt-10 flex flex-col m-auto gap-4 container max-w-screen-md">
+    <div className="container m-auto mt-10 flex max-w-screen-md flex-col gap-4">
       {comments.map((comment) => (
         <Comment
           comment={comment}

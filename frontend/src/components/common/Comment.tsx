@@ -29,7 +29,7 @@ const quill_setting = {
 
 interface CommentProps {
   comment: CommentInterface;
-  updateParent: Function;
+  updateParent: () => void;
 }
 
 const Comment: FunctionComponent<CommentProps> = ({
@@ -97,7 +97,7 @@ const Comment: FunctionComponent<CommentProps> = ({
       leaveTo="transition transform opacity-0"
     >
       <div className="flex flex-col">
-        <div className="flex justify-between p-1 gap-2">
+        <div className="flex justify-between gap-2 p-1">
           <span className="text-sm text-stone-900">
             @{comment.author!.username}
           </span>
@@ -105,7 +105,7 @@ const Comment: FunctionComponent<CommentProps> = ({
           {/* edit delete */}
           {edit ? (
             <button
-              className="px-4 py-0.5 shadow-md rounded-lg bg-stone-900 text-stone-50"
+              className="rounded-lg bg-stone-900 px-4 py-0.5 text-stone-50 shadow-md"
               onClick={() => handleSaveClick()}
             >
               Save
@@ -114,10 +114,10 @@ const Comment: FunctionComponent<CommentProps> = ({
             user_is_author && (
               <div className="flex gap-2">
                 <button onClick={() => handleEditClick()}>
-                  <PencilSquareIcon className="text-stone-900 w-5 h-5" />
+                  <PencilSquareIcon className="h-5 w-5 text-stone-900" />
                 </button>
                 <button onClick={() => handleDeleteClick()}>
-                  <TrashIcon className="text-stone-900 w-5 h-5" />
+                  <TrashIcon className="h-5 w-5 text-stone-900" />
                 </button>
               </div>
             )
@@ -131,14 +131,14 @@ const Comment: FunctionComponent<CommentProps> = ({
           <Delta delta={editedDelta || comment.delta} />
         )}
         {/* stats */}
-        <div className="flex justify-between items-center p-1">
+        <div className="flex items-center justify-between p-1">
           <span className="text-sm text-stone-500">
             {timeAgo(comment.date!)}
           </span>
           <div className="flex items-center gap-2">
             <span className="flex gap-1 text-sm text-stone-500">
               {comment.comments!.length}
-              <ChatBubbleLeftIcon className="w-5 h-5" />
+              <ChatBubbleLeftIcon className="h-5 w-5" />
             </span>
             <LikeButton
               parent_type="comment"

@@ -1,24 +1,35 @@
-import React, { FunctionComponent } from "react";
+import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import React, { FunctionComponent, useEffect, useState } from "react";
+import { useDarkMode } from "../../providers/DarkModeProvider";
 
 interface CodeSandboxEmbedProps {
   embedId: string;
   view?: string;
-  theme?: string;
+  height?: string;
 }
 
 const CodeSandboxEmbed: FunctionComponent<CodeSandboxEmbedProps> = ({
   embedId,
   view = "preview",
-  theme = "light",
+  height = "240px",
 }) => {
-  const src = `https://codesandbox.io/embed/${embedId}?view=${view}&theme=${theme}&hidenavigation=1&fontsize=12&autoresize=1`;
+  const { darkMode } = useDarkMode();
+
+  const src = `https://codesandbox.io/embed/${embedId}?view=${view}&theme=${
+    darkMode ? "dark" : "light"
+  }&hidenavigation=1&fontsize=12&autoresize=1`;
+
+  useEffect(() => {
+    null;
+  }, []);
 
   return (
     <iframe
       src={src}
       style={{
+        position: "relative",
         width: "100%",
-        height: "300px",
+        height: height,
         overflow: "hidden",
       }}
       title="CodeSandbox"

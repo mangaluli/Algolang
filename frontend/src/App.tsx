@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./providers/UserProvider";
+import { DarkModeProvider, useDarkMode } from "./providers/DarkModeProvider";
 import Footer from "./components/common/Footer";
 import Navbar from "./components/common/Navbar";
 import Home from "./components/pages/Home";
@@ -11,6 +12,9 @@ import Posts from "./components/pages/Posts";
 import Profile from "./components/pages/Profile";
 import VerifyEmail from "./components/pages/VerifyEmail";
 import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import User from "./components/pages/User";
+import DarkModeToggle from "./components/common/DarkModeToggle";
 
 const routes = [
   {
@@ -37,7 +41,7 @@ const routes = [
   },
   {
     path: "/new-post",
-    element: <EditPost isNew={true} />,
+    element: <EditPost is_new={true} />,
   },
   {
     path: "/post/:post_id",
@@ -45,9 +49,12 @@ const routes = [
   },
   {
     path: "/edit-post/:post_id",
-    element: <EditPost />,
+    element: <EditPost is_new={false} />,
   },
-
+  {
+    path: "/user/:user_id",
+    element: <User />,
+  },
   {
     path: "*",
     element: <PageNotFound />,
@@ -55,77 +62,35 @@ const routes = [
 ];
 
 function App() {
+  const { darkMode } = useDarkMode();
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
     <UserProvider>
-      <Router>
-        <div className="flex flex-col justify-between min-h-screen bg-stone-50">
-          <Navbar />
-          <Routes>
-            {routes.map((route, index) => (
-              <Route key={index} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-          <Footer />
-        </div>
-      </Router>
-      <Toaster />
+      <DarkModeProvider>
+        <DarkModeToggle />
+        <Router>
+          <div className="flex min-h-screen flex-col justify-between bg-stone-50 dark:bg-stone-950">
+            <Navbar />
+            <Routes>
+              {routes.map((route, index) => (
+                <Route key={index} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+            <Footer />
+          </div>
+        </Router>
+        <Toaster />
+      </DarkModeProvider>
     </UserProvider>
   );
 }
 
 export default App;
-
-// const handleSubmit = async (
-//   values: Values,
-//   { setSubmitting }: FormikHelpers<Values>
-// ) => {
-//   const id = toast.loading("Logging in...");
-//   const login_user = {
-//     email: values.email,
-//     password: values.password,
-//   };
-//   try {
-//     const login_res = await login(login_user);
-
-//     const { jwt } = login_res.data;
-//     const decoded_token = (await jwtDecode(jwt)) as User;
-
-//     const { _id, username, privilege } = decoded_token;
-//     setUser({ _id, username, privilege });
-
-//     console.log(user);
-
-//     localStorage.setItem("session", jwt);
-//     toast.success(`Hi ${jwt.username} 👋🏻`, { id });
-//     navigate("/");
-//   } catch (error: any) {
-//     toast.error(
-//       `Login failed: ${error.response.data.message || "Unexpected Error"}`,
-//       { id }
-//     );
-//   }
-//   setSubmitting(false);
-// };
-
-// <div className="relative inline-block">
-//   <Menu>
-//     <Menu.Button>
-//       <Bars3Icon className="w-10 h-10 p-1 bg-stone-100 rounded-md shadow-md" />
-//     </Menu.Button>
-//     <Menu.Items className="absolute p-1 bg-stone-100 rounded-md shadow-md right-0 border-2">
-//       {links.map((link, index) => (
-//         /* Use the `active` state to conditionally style the active item. */
-//         <Menu.Item key={index} as={Fragment}>
-//           {({ active }) => (
-//             <NavLink
-//               to={link.to}
-//               className="w-full block px-3 py-2 rounded-md text-base font-medium text-stone-900 hover:bg-stone-200"
-//             >
-//               {link.label}
-//             </NavLink>
-//           )}
-//         </Menu.Item>
-//       ))}
-//     </Menu.Items>
-//   </Menu>
-// </div>;

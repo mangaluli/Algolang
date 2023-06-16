@@ -28,11 +28,10 @@ const registerSchema = Yup.object({
     .min(8, "too short"),
 });
 
-interface LoginFormProps {}
+// interface LoginFormProps {}
 
-const LoginForm: FunctionComponent<LoginFormProps> = () => {
-  const { user, setUser } = useContext(UserContext);
-  const { refreshUser } = useContext(UserContext);
+const LoginForm: FunctionComponent = () => {
+  const { user, setUser, refreshUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (
@@ -73,7 +72,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = () => {
               name="email"
               type="email"
               placeholder="legend27@domain.com"
-              className={`px-2 py-1 border-2 rounded-md ${
+              className={`rounded-md border-2 px-2 py-1 ${
                 errors.email && touched.email
                   ? "border-red-400"
                   : "border-stone-400"
@@ -85,7 +84,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = () => {
               </ErrorMessage>
             ) : (
               <span className="text-sm text-stone-500">
-                Only used for email-verification (wont be visible)
+                Please enter your email
               </span>
             )}
           </div>
@@ -100,7 +99,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = () => {
               name="password"
               type="password"
               placeholder="********"
-              className={`px-2 py-1 border-2 rounded-md ${
+              className={`rounded-md border-2 px-2 py-1 ${
                 errors.password && touched.password
                   ? "border-red-400"
                   : "border-stone-400"
@@ -112,14 +111,14 @@ const LoginForm: FunctionComponent<LoginFormProps> = () => {
               </ErrorMessage>
             ) : (
               <span className="text-sm text-stone-500">
-                Choose a strong password for your user access
+                Please enter your password{" "}
               </span>
             )}
           </div>
 
           {/* SUBMIT */}
           <button
-            className="px-4 py-1 mt-1 shadow-md rounded-lg bg-stone-900 text-stone-50 text-lg"
+            className="mt-1 rounded-lg bg-blue-600 px-4 py-1 text-lg text-stone-50 shadow-md"
             disabled={isSubmitting}
             type="submit"
           >

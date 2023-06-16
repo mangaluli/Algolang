@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "mod", "admin", "owner"],
     default: "user",
   },
+  date: {
+    type: String,
+    required: true,
+    default: Date.now,
+  },
 
   username: {
     type: String,
@@ -46,7 +51,7 @@ const userSchema = new mongoose.Schema({
       ref: "posts",
     },
   ],
-  commets: [
+  comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "comments",

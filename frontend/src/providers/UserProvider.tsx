@@ -12,7 +12,9 @@ interface UserContextValue {
 
 export const UserContext = createContext<UserContextValue>({
   user: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setUser: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   refreshUser: () => {},
   userLoading: true,
 });

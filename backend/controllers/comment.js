@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 const Delta = require("../models/Delta");
 const Comment = require("../models/Comment");
+const User = require("../models/User");
 
 exports.addReply = async (req, res) => {
   try {
@@ -116,30 +117,40 @@ exports.deleteComment = async (req, res) => {
 // Toggle Behaviour
 exports.likeComment = async (req, res) => {
   try {
-    const { comment_id } = req.params;
-    const user_id = req.session.user._id;
+    const { user } = req.session;
+    if (!user) {
+      return res
+        .status(401)
+        .send({ message: "Only Registered Users Can Like!" });
+    }
+    const user_id = user._id;
 
+    const { comment_id } = req.params;
     const comment = await Comment.findById(comment_id);
     if (!comment) {
       res.status(404).send({ message: "Comment Not Found!" });
     }
 
-    let update, liked;
+    let comment_update, user_update, liked;
     if (comment.likes.includes(user_id)) {
       liked = false;
-      update = {
+      comment_update = {
         $pull: { likes: user_id },
-        // $set: { score: calculateScore(post, -1) },
+      };
+      user_update = {
+        $pull: { liked_comments: comment._id },
       };
     } else {
       liked = true;
-      update = {
+      comment_update = {
         $push: { likes: user_id },
-        // $set: { score: calculateScore(post, +1) },
+      };
+      user_update = {
+        $push: { liked_comments: comment._id },
       };
     }
-    await Comment.findByIdAndUpdate(comment_id, update);
-
+    await Comment.findByIdAndUpdate(comment_id, comment_update);
+    await User.findByIdAndUpdate(user_id, user_update);
     let likes = comment.likes.length;
     const delta = liked ? +1 : -1;
 

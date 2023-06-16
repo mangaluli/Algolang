@@ -1,4 +1,3 @@
-const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
@@ -10,7 +9,7 @@ const postSchema = new mongoose.Schema({
   date: {
     type: String,
     required: true,
-    default: String(Date.now()),
+    default: Date.now,
   },
   tags: [
     {

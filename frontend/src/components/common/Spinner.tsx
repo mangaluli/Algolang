@@ -26,7 +26,7 @@ const Spinner: FunctionComponent<SpinnerProps> = ({
       <div
         className={
           "flex items-center justify-center " +
-          (fullscreen ? "w-screen h-screen" : "w-full h-full")
+          (fullscreen ? "h-screen w-screen" : "h-full w-full")
         }
       >
         <ArrowPathIcon className={size} />

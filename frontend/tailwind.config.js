@@ -5,6 +5,7 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  darkMode: "class",
   purge: [
     './src/**/*.{js,jsx,ts,tsx}',
     './public/index.html'
