@@ -2,21 +2,17 @@
   "name": "my-fullstack-app",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/server.js",
   "scripts": {
-    "client-install": "npm install --prefix frontend",
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
+    "install-client": "npm install --prefix frontend",
+    "install-server": "npm install --prefix backend",
+    "install": "npm run install-client && npm run install-server",
+    "start-client": "npm start --prefix frontend",
+    "start-server": "npm start --prefix backend",
+    "start": "npm run start-server",
+    "heroku-postbuild": "npm run install-client && npm run build --prefix frontend"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "concurrently": "^6.2.0",
-    "nodemon": "^2.0.7"
+  "engines": {
+    "node": "14.x",
+    "npm": "6.x"
   }
 }
