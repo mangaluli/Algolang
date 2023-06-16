@@ -7,12 +7,11 @@ export function getAllPosts() {
   return api.get("/post");
 }
 
-export function getPaginated(page: number, title = "", tags: string[] = [], sort_by = "") {
-  const title_query = `&title=${title}`;
-  const tags_query = "&" + tags.map(tag => `tags[]=${tag}`).join('&');
-  const sort_by_query = `&sort_by=${sort_by}`;
-
-  return api.get(`post/paginate?page=${page}${title_query}${sort_by_query}${tags_query}`)
+export function getPaginated(query = "") {
+  // const tags_query = "&" + tags.map(tag => `tags[]=${tag}`).join('&');
+  // const query = `?page=${page}&title=${title}&sort_by=${sort_by}${tags_query}`
+  
+  return api.get("post/paginate" + query);
 }
 
 export function getPost(post_id: string) {

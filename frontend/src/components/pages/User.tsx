@@ -6,7 +6,7 @@ import Spinner from "../common/Spinner";
 
 import CommentInterface from "../../interfaces/Comment";
 import PageNotFound from "./PageNotFound";
-import PostPreview from "../common/PostPreview";
+import PostPreview from "../common/PostCard";
 import Comment from "../common/Comment";
 import Delta from "../../interfaces/Delta";
 import Tag from "../../interfaces/Tag";

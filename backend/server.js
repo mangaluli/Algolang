@@ -41,12 +41,6 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
-
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const verification = require("./routes/verification");
@@ -64,6 +58,12 @@ app.use("/api/post", post);
 app.use("/api/tag", tag);
 app.use("/api/comment", comment);
 app.use("/api/profile", profile);
+
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 app.listen(PORT, () =>
   console.log(`Port ${PORT} active, Node server standing by.`)

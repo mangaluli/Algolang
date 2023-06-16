@@ -71,12 +71,6 @@ exports.getPaginated = async (req, res) => {
         break;
     }
 
-    if (sort_by === "date_desc") {
-      sortOptions = { _id: -1 };
-    } else if (sort_by === "likes") {
-      sortOptions = { likes: -1 };
-    }
-
     const totalPosts = await Post.countDocuments(query);
     const totalPages = Math.ceil(totalPosts / pageSize);
 

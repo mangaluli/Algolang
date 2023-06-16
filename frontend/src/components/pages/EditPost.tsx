@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addPost, getPost, updatePost } from "../../apis/postApi";
 import { UserContext } from "../../providers/UserProvider";
 import EditPostForm from "../common/EditPostForm";
-import PostPreview from "../common/PostPreview";
+import PostPreview from "../common/PostCard";
 import * as Yup from "yup";
 import EditDeltaForm from "../common/EditDeltaForm";
 import PageNotFound from "./PageNotFound";

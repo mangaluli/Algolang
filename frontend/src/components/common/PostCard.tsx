@@ -39,11 +39,11 @@ const reports = [
   { value: "post", text: "post" },
 ];
 
-interface PostPreviewProps {
+interface PostCardProps {
   post: Post;
 }
 
-const PostPreview: FunctionComponent<PostPreviewProps> = ({ post }) => {
+const PostCard: FunctionComponent<PostCardProps> = ({ post }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
@@ -335,4 +335,4 @@ const PostPreview: FunctionComponent<PostPreviewProps> = ({ post }) => {
   );
 };
 
-export default PostPreview;
+export default PostCard;

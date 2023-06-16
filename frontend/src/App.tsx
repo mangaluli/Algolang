@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import User from "./components/pages/User";
 import DarkModeToggle from "./components/common/DarkModeToggle";
+import Browse from "./components/pages/Browse";
 
 const routes = [
   {
@@ -54,6 +55,10 @@ const routes = [
   {
     path: "/user/:user_id",
     element: <User />,
+  },
+  {
+    path: "/browse",
+    element: <Browse />,
   },
   {
     path: "*",

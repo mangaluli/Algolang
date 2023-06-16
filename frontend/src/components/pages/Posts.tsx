@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { getPaginated } from "../../apis/postApi";
 import { getAllTags } from "../../apis/tagsApi";
 import Tag from "../../interfaces/Tag";
-import PostPreview from "../common/PostPreview";
+import PostPreview from "../common/PostCard";
 import Spinner from "../common/Spinner";
 import Delta from "../../interfaces/Delta";
 import User from "../../interfaces/User";
@@ -43,7 +43,7 @@ const Posts: FunctionComponent = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [title, setTitle] = useState("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [sortBy, setSortBy] = useState<number>(0);
+  const [sortBy, setSortBy] = useState(0);
 
   const [fetchingPosts, setFetchingPosts] = useState(false);
 
@@ -65,15 +65,16 @@ const Posts: FunctionComponent = () => {
 
       let currentPage = newPage !== undefined ? newPage : page;
 
-      const tags_query: string[] = selectedTags.map((tag) => tag._id);
-
       if (queryChanged) {
         setPage(() => 1);
         currentPage = 1;
         setQueryChanged(false);
       }
-
-      getPaginated(currentPage, title, tags_query, sorts[sortBy].value)
+      getPaginated(
+        `?page=${page}&title=${title}&sort_by=${
+          sorts[sortBy].value
+        }&${selectedTags.map((tag) => `tags[]=${tag._id}`).join("&")}`
+      )
         .then((res) => {
           setPosts(res.data.posts);
           setTotalPages(res.data.totalPages);
