@@ -80,7 +80,9 @@ const LoginForm: FunctionComponent = () => {
             />
             {errors.email && touched.email ? (
               <ErrorMessage name="email">
-                {(msg) => <span className="text-sm text-red-400">{msg}</span>}
+                {(msg: string) => (
+                  <span className="text-sm text-red-400">{msg}</span>
+                )}
               </ErrorMessage>
             ) : (
               <span className="text-sm text-stone-500">
@@ -107,7 +109,9 @@ const LoginForm: FunctionComponent = () => {
             />
             {errors.password && touched.password ? (
               <ErrorMessage name="password">
-                {(msg) => <span className="text-sm text-red-400">{msg}</span>}
+                {(msg: string) => (
+                  <span className="text-sm text-red-400">{msg}</span>
+                )}
               </ErrorMessage>
             ) : (
               <span className="text-sm text-stone-500">
