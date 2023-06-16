@@ -6,6 +6,7 @@ const app = express();
 var morgan = require("morgan");
 const cors = require("cors");
 var session = require("express-session");
+const path = require("path");
 const MongoStore = require("connect-mongo");
 
 mongoose
@@ -39,6 +40,12 @@ app.use(
     },
   })
 );
+
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 const auth = require("./routes/auth");
 const user = require("./routes/user");
