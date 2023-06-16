@@ -1,6 +1,6 @@
 {
-  "name": "my-fullstack-app",
-  "version": "1.0.0",
+  "name": "AlgoLang",
+  "version": "0.0.1",
   "description": "",
   "scripts": {
     "install-client": "npm install --prefix frontend",
