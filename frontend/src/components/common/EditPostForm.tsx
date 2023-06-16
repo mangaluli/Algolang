@@ -139,7 +139,7 @@ const EditPostForm: FunctionComponent<EditPostFormProps> = ({
               />
               {errors.title && touched.title ? (
                 <ErrorMessage name="title">
-                  {(msg) => (
+                  {(msg: string) => (
                     <span className="text-sm text-red-400">{String(msg)}</span>
                   )}
                 </ErrorMessage>
@@ -179,7 +179,7 @@ const EditPostForm: FunctionComponent<EditPostFormProps> = ({
               </div>
               {errors.url && touched.url ? (
                 <ErrorMessage name="url">
-                  {(msg) => (
+                  {(msg: string) => (
                     <span className="text-sm text-red-400">{String(msg)}</span>
                   )}
                 </ErrorMessage>
