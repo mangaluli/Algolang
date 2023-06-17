@@ -33,7 +33,7 @@ app.use(
       mongoUrl: process.env.DB,
     }),
     cookie: {
-      secure: false,
+      secure: true,
       httpOnly: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24,
