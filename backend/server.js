@@ -16,6 +16,8 @@ mongoose
     console.log(error);
   });
 
+app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(
