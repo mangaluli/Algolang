@@ -85,7 +85,6 @@ exports.login = async (req, res) => {
 
     const { _id, username, privilege } = user;
 
-    // Instead of regenerating, directly assign the user data to the session
     req.session.user = { _id, username, privilege };
     await req.session.save();
 

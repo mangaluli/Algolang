@@ -47,7 +47,7 @@ if (process.env.NODE_ENV === "development") {
 if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
-      origin: "https://algolang.net",
+      origin: ["http://algolang.net", "https://algolang.net"],
       credentials: true,
     })
   );
