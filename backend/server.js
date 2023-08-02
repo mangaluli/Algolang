@@ -20,28 +20,54 @@ app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB,
-    }),
-    cookie: {
-      secure: true,
-      httpOnly: false,
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24,
-    },
-  })
-);
+if (process.env.NODE_ENV === "development") {
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: process.env.DB,
+      }),
+      cookie: {
+        secure: false,
+        httpOnly: false,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24,
+      },
+    })
+  );
+}
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    cors({
+      origin: "https://algolang.net",
+      credentials: true,
+    })
+  );
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: process.env.DB,
+      }),
+      cookie: {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24,
+      },
+    })
+  );
+}
 
 const auth = require("./routes/auth");
 const user = require("./routes/user");

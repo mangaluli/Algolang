@@ -4,10 +4,10 @@ exports.getAllTags = async (req, res) => {
   try {
     const tags = await Tag.find();
 
-    await res.status(200).send(tags);
+    return res.status(200).send(tags);
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
@@ -18,13 +18,13 @@ exports.getTag = async (req, res) => {
     const post = await Tag.findById(tag_id);
 
     if (!post) {
-      await res.status(404).send({ message: "No post found!" });
+      return res.status(404).send({ message: "No post found!" });
     }
 
-    await res.status(200).send(post);
+    return res.status(200).send(post);
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
@@ -35,14 +35,14 @@ exports.addTag = async (req, res) => {
     const tag = req.body;
 
     if (!tag) {
-      await res.status(400).send({ message: "Wrong Body!" });
+      return res.status(400).send({ message: "Wrong Body!" });
     }
 
     // to be implemented
     const validation_error = false;
 
     if (validation_error) {
-      await res.status(400).send({ message: "Wrong Body!" });
+      return res.status(400).send({ message: "Wrong Body!" });
     }
 
     const tag_overlap = await Tag.findOne({ value: tag.value });
@@ -55,9 +55,9 @@ exports.addTag = async (req, res) => {
 
     await Tag.create(tag);
 
-    await res.status(201).send({ message: "Tag created successfully!" });
+    return res.status(201).send({ message: "Tag created successfully!" });
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };

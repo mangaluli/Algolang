@@ -25,10 +25,10 @@ exports.addReply = async (req, res) => {
     await Post.findByIdAndUpdate(comment_id, update);
     await new_reply.save();
 
-    await res.status(201).send({ message: "Reply posted successfully!" });
+    return res.status(201).send({ message: "Reply posted successfully!" });
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };
 
@@ -117,12 +117,7 @@ exports.deleteComment = async (req, res) => {
 // Toggle Behaviour
 exports.likeComment = async (req, res) => {
   try {
-    const { user } = req.session;
-    if (!user) {
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Like!" });
-    }
+    const user = req.session.user;
     const user_id = user._id;
 
     const { comment_id } = req.params;

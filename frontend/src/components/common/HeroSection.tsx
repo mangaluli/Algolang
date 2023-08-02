@@ -1,10 +1,13 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // interface HeroSectionProps {}
 
 const HeroSection: FunctionComponent = () => {
   const [animation, setAnimation] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setAnimation(true);
@@ -47,7 +50,10 @@ const HeroSection: FunctionComponent = () => {
           </p>
         </div>
         <div className="py-4">
-          <button className="rounded-md border-2 border-stone-50 bg-blue-600 px-8 py-2 text-lg font-bold text-stone-50 hover:border-blue-600">
+          <button
+            className="rounded-md border-2 border-stone-50 bg-blue-600 px-8 py-2 text-lg font-bold text-stone-50 hover:border-blue-600"
+            onClick={() => navigate("/connect/register")}
+          >
             JOIN NOW!
           </button>
         </div>

@@ -116,11 +116,6 @@ exports.getPost = async (req, res) => {
 exports.addPost = async (req, res) => {
   try {
     const user = req.session.user;
-    if (!user) {
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Post!" });
-    }
 
     const post = req.body;
     if (!post) {
@@ -165,13 +160,6 @@ exports.updatePost = async (req, res) => {
   session.startTransaction();
   try {
     const user = req.session.user;
-    if (!user) {
-      await session.abortTransaction();
-      session.endSession();
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Post!" });
-    }
 
     const post = req.body;
     if (!post) {
@@ -235,78 +223,46 @@ exports.updatePost = async (req, res) => {
 };
 
 exports.deletePost = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
-    const user = req.session.user;
-    if (!user) {
-      await session.abortTransaction();
-      session.endSession();
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Post!" });
-    }
+    const user_id = req.session.user._id;
+    const post_id = req.params.post_id;
 
-    const { post_id } = req.params;
     if (post_id.length !== 24) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).send({ message: "Invalid Id" });
     }
 
     const post_to_delete = await Post.findById(post_id);
     if (!post_to_delete) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(404).send({ message: "Post Not Found" });
     }
 
-    if (user._id !== String(post_to_delete.author._id)) {
-      await session.abortTransaction();
-      session.endSession();
+    if (user_id !== String(post_to_delete.author._id)) {
       return res
         .status(403)
         .send({ message: "Only The Author Can Edit The Post!" });
     }
 
-    const user_id = user._id;
     const user_update = {
       $pull: { posts: post_id },
     };
 
     await Promise.all([
-      post_to_delete.deleteOne({ session }),
-      Delta.findByIdAndDelete(post_to_delete.delta, { session }),
-      Comment.deleteMany(
-        { _id: { $in: post_to_delete.comments } },
-        { session }
-      ),
+      post_to_delete.deleteOne(),
+      Delta.findByIdAndDelete(post_to_delete.delta),
+      Comment.deleteMany({ _id: { $in: post_to_delete.comments } }),
       User.findByIdAndUpdate(user_id, user_update),
     ]);
-
-    await session.commitTransaction();
-    session.endSession();
 
     return res.status(200).send({ message: "Post deleted successfully" });
   } catch (error) {
     console.log(error);
-    await session.abortTransaction();
-    session.endSession();
     return res.status(500).send({ message: "Server Error!" });
   }
 };
 
 exports.addComment = async (req, res) => {
   try {
-    // NEW COMMENT
-    const { user } = req.session;
-    if (!user) {
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Comment!" });
-    }
-    const user_id = user._id;
+    const user_id = req.session.user._id;
 
     // TODO
     const validation_error = false;
@@ -316,7 +272,6 @@ exports.addComment = async (req, res) => {
 
     const new_comment = new Comment({ ...req.body, author: user_id });
 
-    // UPDATE POST WITH NEW COMMENT
     const post_id = new_comment.parent;
     const post = await Post.findById(post_id);
 
@@ -341,15 +296,7 @@ exports.addComment = async (req, res) => {
 // Toggle Behaviour
 exports.likePost = async (req, res) => {
   try {
-    const { post_id } = req.params;
-
-    const { user } = req.session;
-    if (!user) {
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Like!" });
-    }
-
+    const post_id = req.params.post_id;
     const user_id = req.session.user._id;
 
     const post = await Post.findById(post_id);
@@ -393,14 +340,7 @@ exports.likePost = async (req, res) => {
 
 exports.reportPost = async (req, res) => {
   try {
-    const { user } = req.session;
-    if (!user) {
-      return res
-        .status(401)
-        .send({ message: "Only Registered Users Can Report!" });
-    }
     const user_id = req.session.user._id;
-
     const post = req.body;
 
     // TODO
@@ -409,7 +349,7 @@ exports.reportPost = async (req, res) => {
       return res.status(400).send({ message: "Invalid Post" });
     }
 
-    const { post_id } = req.params;
+    const post_id = req.params.post_id;
     if (post_id.length !== 24) {
       return res.status(400).send({ message: "Invalid Id" });
     }

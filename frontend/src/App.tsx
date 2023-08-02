@@ -7,7 +7,6 @@ import Home from "./components/pages/Home";
 import Connect from "./components/pages/Connect";
 import EditPost from "./components/pages/EditPost";
 import PageNotFound from "./components/pages/PageNotFound";
-import Post from "./components/pages/Post";
 import Posts from "./components/pages/Posts";
 import Profile from "./components/pages/Profile";
 import VerifyEmail from "./components/pages/VerifyEmail";
@@ -16,6 +15,9 @@ import { useEffect } from "react";
 import User from "./components/pages/User";
 import DarkModeToggle from "./components/common/DarkModeToggle";
 import Browse from "./components/pages/Browse";
+import Postt from "./components/pages/Postt";
+import About from "./components/pages/About";
+import Disclaimer from "./components/pages/Disclaimer";
 
 const routes = [
   {
@@ -23,8 +25,12 @@ const routes = [
     element: <Home />,
   },
   {
-    path: "/connect",
-    element: <Connect />,
+    path: "/connect/login",
+    element: <Connect defaultTab={0} />,
+  },
+  {
+    path: "/connect/register",
+    element: <Connect defaultTab={1} />,
   },
   {
     path: "/profile",
@@ -46,7 +52,7 @@ const routes = [
   },
   {
     path: "/post/:post_id",
-    element: <Post />,
+    element: <Postt />,
   },
   {
     path: "/edit-post/:post_id",
@@ -60,6 +66,7 @@ const routes = [
     path: "/browse",
     element: <Browse />,
   },
+  { path: "/about", element: <About /> },
   {
     path: "*",
     element: <PageNotFound />,
@@ -83,6 +90,7 @@ function App() {
         <DarkModeToggle />
         <Router>
           <div className="flex min-h-screen flex-col justify-between bg-stone-50 dark:bg-stone-950">
+            <Disclaimer />
             <Navbar />
             <Routes>
               {routes.map((route, index) => (
@@ -92,7 +100,7 @@ function App() {
             <Footer />
           </div>
         </Router>
-        <Toaster />
+        <Toaster position="bottom-right" />
       </DarkModeProvider>
     </UserProvider>
   );

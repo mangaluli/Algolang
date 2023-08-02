@@ -69,7 +69,7 @@ const PostCard: FunctionComponent<PostCardProps> = ({ post }) => {
             toast.success("Post deleted successfully!", { id });
             setDeleteDialogOpen(false);
             setDeleting(false);
-            navigate("/posts");
+            window.location.reload();
           })
           .catch((error) => {
             toast.error("Failed to delete post: " + error, { id });
@@ -202,8 +202,8 @@ const PostCard: FunctionComponent<PostCardProps> = ({ post }) => {
             </span>
           </p>
         </div>
-        <div className="flex items-center gap-8">
-          <div className="flex gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex gap-3">
             <span className="text-sm text-gray-500">
               {post.likes.length} likes
             </span>

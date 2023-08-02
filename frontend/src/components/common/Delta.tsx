@@ -19,8 +19,8 @@ const Delta: FunctionComponent<DeltaProps> = ({ delta }) => {
   }, [quill]);
 
   return (
-    <div className="h-full w-full bg-white shadow-md">
-      <div ref={quillRef}></div>
+    <div className="h-full w-full bg-white ">
+      <div className="border" ref={quillRef}></div>
     </div>
   );
 };

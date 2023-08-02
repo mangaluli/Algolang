@@ -37,9 +37,9 @@ exports.getProfile = async (req, res) => {
       return res.status(404).send({ message: "User Not Found!" });
     }
 
-    await res.status(200).send(user[0]);
+    return res.status(200).send(user[0]);
   } catch (error) {
     console.log(error);
-    await res.status(500).send({ message: "Server Error!" });
+    return res.status(500).send({ message: "Server Error!" });
   }
 };

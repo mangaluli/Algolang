@@ -109,7 +109,7 @@ const Navbar: FunctionComponent = () => {
                 ) : (
                   <button
                     className="h-max rounded-md border-2 border-blue-600 bg-white px-4 py-1 font-bold text-blue-600 hover:bg-blue-600 hover:text-stone-50"
-                    onClick={() => navigate("/connect")}
+                    onClick={() => navigate("/connect/login")}
                   >
                     Connect
                   </button>
