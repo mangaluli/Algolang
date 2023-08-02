@@ -85,17 +85,11 @@ exports.login = async (req, res) => {
 
     const { _id, username, privilege } = user;
 
-    req.session.regenerate(async function (error) {
-      if (error) {
-        console.log(error);
-        return res.status(500).send({ message: "Server error" });
-      }
+    // Instead of regenerating, directly assign the user data to the session
+    req.session.user = { _id, username, privilege };
+    await req.session.save();
 
-      req.session.user = { _id, username, privilege };
-      await req.session.save();
-
-      res.status(200).send({ message: "Login successful" });
-    });
+    res.status(200).send({ message: "Login successful" });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Server error" });
