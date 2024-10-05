@@ -10,7 +10,7 @@ const path = require("path");
 const MongoStore = require("connect-mongo");
 
 mongoose
-  .connect(process.env.DB, { useNewUrlParser: true })
+  .connect(process.env.DB, { useNewUrlParser: true, dbName: "Algolang" })
   .then(() => console.log("Mongoose connection established. Standing by."))
   .catch((error) => {
     console.log(error);
