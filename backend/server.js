@@ -98,5 +98,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, () =>
-  console.log(`Port ${PORT} active, Node server standing by.`)
+  console.log(`Port ${PORT} active, Node server standing by..`)
 );
