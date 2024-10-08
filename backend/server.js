@@ -10,7 +10,9 @@ const path = require("path");
 const MongoStore = require("connect-mongo");
 
 mongoose
-  .connect(process.env.DB, { useNewUrlParser: true, dbName: "Algolang" })
+  .connect(
+    process.env.DB, 
+    {useNewUrlParser: true, dbName: "Algolang"})
   .then(() => console.log("Mongoose connection established. Standing by."))
   .catch((error) => {
     console.log(error);
@@ -34,6 +36,7 @@ if (process.env.NODE_ENV === "development") {
       saveUninitialized: false,
       store: MongoStore.create({
         mongoUrl: process.env.DB,
+        dbName: "Algolang",
       }),
       cookie: {
         secure: false,
@@ -62,6 +65,7 @@ if (process.env.NODE_ENV === "production") {
       saveUninitialized: false,
       store: MongoStore.create({
         mongoUrl: process.env.DB,
+        dbName: "Algolang",
       }),
       cookie: {
         secure: true,
